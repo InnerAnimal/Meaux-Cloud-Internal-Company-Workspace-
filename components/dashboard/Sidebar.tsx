@@ -8,7 +8,7 @@ interface SidebarProps {
 export default function Sidebar({ currentSection, setCurrentSection }: SidebarProps) {
   const navItems = [
     { id: 'overview', icon: 'fa-tachometer-alt', label: 'Overview' },
-    { id: 'gmail', icon: 'fa-envelope', label: 'Gmail' },
+    { id: 'gmail', icon: 'fa-envelope', label: 'Email' },
     { id: 'calendar', icon: 'fa-calendar', label: 'Calendar' },
     { id: 'meet', icon: 'fa-video', label: 'Google Meet' },
     { id: 'drive', icon: 'fa-folder', label: 'Google Drive' },

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Sidebar from '@/components/dashboard/Sidebar';
 import Header from '@/components/dashboard/Header';
 import OverviewSection from '@/components/dashboard/OverviewSection';
-import GmailSection from '@/components/dashboard/GmailSection';
+import EmailSection from '@/components/dashboard/EmailSection';
 import CalendarSection from '@/components/dashboard/CalendarSection';
 import MeetSection from '@/components/dashboard/MeetSection';
 import DriveSection from '@/components/dashboard/DriveSection';
@@ -36,7 +36,7 @@ export default function Dashboard() {
         <Header />
 
         {currentSection === 'overview' && <OverviewSection setCurrentSection={setCurrentSection} showNotification={showNotification} />}
-        {currentSection === 'gmail' && <GmailSection showNotification={showNotification} />}
+        {currentSection === 'gmail' && <EmailSection showNotification={showNotification} />}
         {currentSection === 'calendar' && <CalendarSection showNotification={showNotification} />}
         {currentSection === 'meet' && <MeetSection showNotification={showNotification} />}
         {currentSection === 'drive' && <DriveSection showNotification={showNotification} />}
