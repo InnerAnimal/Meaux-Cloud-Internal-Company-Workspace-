@@ -1,0 +1,41 @@
+{
+  "name": "meaux-cloud-internal-company-workspace-",
+  "version": "1.0.0",
+  "description": "MeauxCloud will be our internal email, facetime, streaming, dashboard, and overall our company workspace",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://local_proxy@127.0.0.1:41519/git/InnerAnimal/Meaux-Cloud-Internal-Company-Workspace-"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@stripe/stripe-js": "^8.3.0",
+    "@supabase/supabase-js": "^2.80.0",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "autoprefixer": "^10.4.21",
+    "next": "^16.0.1",
+    "next-auth": "^5.0.0-beta.30",
+    "postcss": "^8.5.6",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "resend": "^6.4.1",
+    "stripe": "^19.3.0",
+    "tailwindcss": "^4.1.17",
+    "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.17",
+    "@types/node": "^24.10.0",
+    "eslint": "^9.39.1",
+    "eslint-config-next": "^16.0.1"
+  }
+}
