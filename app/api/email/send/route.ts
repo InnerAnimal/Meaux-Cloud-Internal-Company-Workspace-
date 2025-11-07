@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sendEmail } from '@/lib/email';
 import { isValidEmail, isVerifiedSender } from '@/lib/email/utils';
+import { logEmailToDatabase, incrementSenderUsage } from '@/lib/email/supabase-integration';
 import type { SendEmailParams } from '@/lib/email/types';
 
 /**
@@ -86,6 +87,36 @@ export async function POST(request: NextRequest) {
         },
         { status: 500 }
       );
+    }
+
+    // Log email to Supabase database
+    try {
+      const toEmails = Array.isArray(body.to)
+        ? body.to.map((e: any) => typeof e === 'string' ? e : e.email)
+        : [typeof body.to === 'string' ? body.to : body.to.email];
+
+      await logEmailToDatabase({
+        resendEmailId: result.id,
+        from: fromEmail,
+        fromName: typeof body.from === 'string' ? undefined : body.from.name,
+        to: toEmails,
+        cc: body.cc ? (Array.isArray(body.cc) ? body.cc : [body.cc]) : undefined,
+        bcc: body.bcc ? (Array.isArray(body.bcc) ? body.bcc : [body.bcc]) : undefined,
+        replyTo: body.replyTo,
+        subject: body.subject,
+        htmlBody: body.html,
+        textBody: body.text,
+        category: body.category || 'transactional',
+        tags: body.tags,
+        ipAddress: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || undefined,
+        userAgent: request.headers.get('user-agent') || undefined,
+      });
+
+      // Increment sender usage counter
+      await incrementSenderUsage(fromEmail);
+    } catch (dbError) {
+      // Log error but don't fail the request
+      console.error('Error logging email to database:', dbError);
     }
 
     return NextResponse.json({
