@@ -1,0 +1,16 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Encryption keys (NEVER commit!)
+*encryption-key*
+*vault-key*
+*secret-key*
+
+# Node modules (if you add any)
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
