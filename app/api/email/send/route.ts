@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
 
     // Validate recipients
     const recipients = Array.isArray(body.to) ? body.to : [body.to];
-    const invalidRecipients = recipients.filter((email: string) => {
+    const invalidRecipients = recipients.filter((email: string | { email: string }) => {
       const emailStr = typeof email === 'string' ? email : email.email;
       return !isValidEmail(emailStr);
     });
