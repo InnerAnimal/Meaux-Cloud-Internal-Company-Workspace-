@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meauxbility Cloud Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary-color: #64748b;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --background-color: #f8fafc;
+            --card-background: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--card-background);
+            border-right: 1px solid var(--border-color);
+            padding: 2rem 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            padding: 0 2rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .logo i {
+            font-size: 2rem;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 2rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background-color: #f1f5f9;
+            color: var(--primary-color);
+            border-left-color: var(--primary-color);
+        }
+
+        .nav-link i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .quick-action {
+            background: var(--card-background);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .quick-action:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-color);
+        }
+
+        .quick-action i {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .quick-action h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .quick-action p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        /* Service Cards */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .service-card {
+            background: var(--card-background);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .service-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .service-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .service-icon.gmail { background: #ea4335; }
+        .service-icon.calendar { background: #4285f4; }
+        .service-icon.meet { background: #00ac47; }
+        .service-icon.drive { background: #ff9800; }
+        .service-icon.cloud { background: #34a853; }
+        .service-icon.stripe { background: #635bff; }
+        .service-icon.supabase { background: #3ecf8e; }
+        .service-icon.render { background: #46e3b7; }
+
+        .service-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .service-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-online {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-offline {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .service-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #475569;
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        /* Email Integration */
+        .email-preview {
+            background: var(--card-background);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .email-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+        }
+
+        .email-item:hover {
+            background: #f8fafc;
+        }
+
+        .email-item:last-child {
+            border-bottom: none;
+        }
+
+        .email-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .email-content {
+            flex: 1;
+        }
+
+        .email-sender {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .email-subject {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .email-preview-text {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+        }
+
+        .email-time {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+        }
+
+        /* Calendar Integration */
+        .calendar-preview {
+            background: var(--card-background);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .calendar-event {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-left: 4px solid var(--primary-color);
+            background: #f8fafc;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .event-time {
+            font-weight: 600;
+            color: var(--primary-color);
+            min-width: 80px;
+        }
+
+        .event-title {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .event-description {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Meet Integration */
+        .meet-controls {
+            background: var(--card-background);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .meet-button {
+            width: 100%;
+            padding: 1rem;
+            background: var(--success-color);
+            color: white;
+            border: none;
+            border-radius: 0.75rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 1rem;
+        }
+
+        .meet-button:hover {
+            background: #059669;
+            transform: translateY(-1px);
+        }
+
+        .meet-link {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            font-family: monospace;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            word-break: break-all;
+        }
+
+        /* Cloud Storage */
+        .storage-overview {
+            background: var(--card-background);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .storage-bar {
+            background: #e2e8f0;
+            border-radius: 1rem;
+            height: 8px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .storage-used {
+            background: var(--primary-color);
+            height: 100%;
+            border-radius: 1rem;
+            transition: width 0.3s ease;
+        }
+
+        .storage-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .storage-stat {
+            text-align: center;
+        }
+
+        .storage-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .storage-stat-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .quick-actions {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading States */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: var(--card-background);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            border-left: 4px solid var(--success-color);
+        }
+
+        .notification.error {
+            border-left: 4px solid var(--danger-color);
+        }
+
+        .notification.warning {
+            border-left: 4px solid var(--warning-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-cloud"></i>
+                    <span>Meauxbility Cloud</span>
+                </div>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#overview" class="nav-link active" data-section="overview">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Overview</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#gmail" class="nav-link" data-section="gmail">
+                        <i class="fas fa-envelope"></i>
+                        <span>Gmail</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#calendar" class="nav-link" data-section="calendar">
+                        <i class="fas fa-calendar"></i>
+                        <span>Calendar</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#meet" class="nav-link" data-section="meet">
+                        <i class="fas fa-video"></i>
+                        <span>Google Meet</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#drive" class="nav-link" data-section="drive">
+                        <i class="fas fa-folder"></i>
+                        <span>Google Drive</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#cloud" class="nav-link" data-section="cloud">
+                        <i class="fas fa-server"></i>
+                        <span>Cloud Storage</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#payments" class="nav-link" data-section="payments">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Stripe</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#database" class="nav-link" data-section="database">
+                        <i class="fas fa-database"></i>
+                        <span>Supabase</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#hosting" class="nav-link" data-section="hosting">
+                        <i class="fas fa-globe"></i>
+                        <span>Render</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="header">
+                <h1>Cloud Services Dashboard</h1>
+                <div class="user-info">
+                    <div class="user-avatar">SM</div>
+                    <span>Sam Meauxbility</span>
+                </div>
+            </div>
+
+            <!-- Overview Section -->
+            <section id="overview-section" class="content-section">
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <a href="#gmail" class="quick-action" onclick="switchSection('gmail')">
+                        <i class="fas fa-envelope"></i>
+                        <h3>Check Email</h3>
+                        <p>View latest messages</p>
+                    </a>
+                    <a href="#meet" class="quick-action" onclick="switchSection('meet')">
+                        <i class="fas fa-video"></i>
+                        <h3>Start Meeting</h3>
+                        <p>Create instant meeting</p>
+                    </a>
+                    <a href="#calendar" class="quick-action" onclick="switchSection('calendar')">
+                        <i class="fas fa-calendar-plus"></i>
+                        <h3>Schedule Event</h3>
+                        <p>Add to calendar</p>
+                    </a>
+                    <a href="#drive" class="quick-action" onclick="switchSection('drive')">
+                        <i class="fas fa-upload"></i>
+                        <h3>Upload File</h3>
+                        <p>Add to Drive</p>
+                    </a>
+                </div>
+
+                <!-- Services Status -->
+                <div class="services-grid">
+                    <div class="service-card">
+                        <div class="service-header">
+                            <div class="service-icon gmail">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div>
+                                <h3 class="service-title">Gmail</h3>
+                                <span class="service-status status-online">
+                                    <i class="fas fa-circle"></i>
+                                    Online
+                                </span>
+                            </div>
+                        </div>
+                        <p>Email service connected and syncing</p>
+                        <div class="service-actions">
+                            <button class="btn btn-primary" onclick="switchSection('gmail')">
+                                <i class="fas fa-eye"></i>
+                                View Inbox
+                            </button>
+                            <button class="btn btn-secondary" onclick="composeEmail()">
+                                <i class="fas fa-edit"></i>
+                                Compose
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="service-header">
+                            <div class="service-icon calendar">
+                                <i class="fas fa-calendar"></i>
+                            </div>
+                            <div>
+                                <h3 class="service-title">Google Calendar</h3>
+                                <span class="service-status status-online">
+                                    <i class="fas fa-circle"></i>
+                                    Online
+                                </span>
+                            </div>
+                        </div>
+                        <p>Calendar events synced and updated</p>
+                        <div class="service-actions">
+                            <button class="btn btn-primary" onclick="switchSection('calendar')">
+                                <i class="fas fa-eye"></i>
+                                View Calendar
+                            </button>
+                            <button class="btn btn-secondary" onclick="createEvent()">
+                                <i class="fas fa-plus"></i>
+                                Add Event
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="service-header">
+                            <div class="service-icon meet">
+                                <i class="fas fa-video"></i>
+                            </div>
+                            <div>
+                                <h3 class="service-title">Google Meet</h3>
+                                <span class="service-status status-online">
+                                    <i class="fas fa-circle"></i>
+                                    Online
+                                </span>
+                            </div>
+                        </div>
+                        <p>Video conferencing ready</p>
+                        <div class="service-actions">
+                            <button class="btn btn-primary" onclick="switchSection('meet')">
+                                <i class="fas fa-eye"></i>
+                                View Controls
+                            </button>
+                            <button class="btn btn-success" onclick="createMeeting()">
+                                <i class="fas fa-video"></i>
+                                Start Meeting
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="service-header">
+                            <div class="service-icon drive">
+                                <i class="fas fa-folder"></i>
+                            </div>
+                            <div>
+                                <h3 class="service-title">Google Drive</h3>
+                                <span class="service-status status-online">
+                                    <i class="fas fa-circle"></i>
+                                    Online
+                                </span>
+                            </div>
+                        </div>
+                        <p>File storage and collaboration</p>
+                        <div class="service-actions">
+                            <button class="btn btn-primary" onclick="switchSection('drive')">
+                                <i class="fas fa-eye"></i>
+                                View Files
+                            </button>
+                            <button class="btn btn-secondary" onclick="uploadFile()">
+                                <i class="fas fa-upload"></i>
+                                Upload
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="service-header">
+                            <div class="service-icon cloud">
+                                <i class="fas fa-server"></i>
+                            </div>
+                            <div>
+                                <h3 class="service-title">Google Cloud</h3>
+                                <span class="service-status status-online">
+                                    <i class="fas fa-circle"></i>
+                                    Online
+                                </span>
+                            </div>
+                        </div>
+                        <p>2TB storage optimized</p>
+                        <div class="service-actions">
+                            <button class="btn btn-primary" onclick="switchSection('cloud')">
+                                <i class="fas fa-eye"></i>
+                                View Storage
+                            </button>
+                            <button class="btn btn-secondary" onclick="optimizeStorage()">
+                                <i class="fas fa-cog"></i>
+                                Optimize
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="service-header">
+                            <div class="service-icon stripe">
+                                <i class="fas fa-credit-card"></i>
+                            </div>
+                            <div>
+                                <h3 class="service-title">Stripe</h3>
+                                <span class="service-status status-warning">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    Needs Setup
+                                </span>
+                            </div>
+                        </div>
+                        <p>Payment processing</p>
+                        <div class="service-actions">
+                            <button class="btn btn-primary" onclick="switchSection('payments')">
+                                <i class="fas fa-eye"></i>
+                                View Dashboard
+                            </button>
+                            <button class="btn btn-warning" onclick="setupStripe()">
+                                <i class="fas fa-cog"></i>
+                                Setup
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Gmail Section -->
+            <section id="gmail-section" class="content-section" style="display: none;">
+                <div class="email-preview">
+                    <h2>Recent Emails</h2>
+                    <div id="email-list">
+                        <div class="email-item">
+                            <div class="email-avatar">C</div>
+                            <div class="email-content">
+                                <div class="email-sender">Connor</div>
+                                <div class="email-subject">Project Update - Meauxbility</div>
+                                <div class="email-preview-text">Hey Sam, here's the latest update on our project...</div>
+                            </div>
+                            <div class="email-time">2m ago</div>
+                        </div>
+                        <div class="email-item">
+                            <div class="email-avatar">F</div>
+                            <div class="email-content">
+                                <div class="email-sender">Fred</div>
+                                <div class="email-subject">Meeting Tomorrow</div>
+                                <div class="email-preview-text">Don't forget about our team meeting tomorrow at 2 PM...</div>
+                            </div>
+                            <div class="email-time">1h ago</div>
+                        </div>
+                        <div class="email-item">
+                            <div class="email-avatar">I</div>
+                            <div class="email-content">
+                                <div class="email-sender">InnerAnimals</div>
+                                <div class="email-subject">New Support Request</div>
+                                <div class="email-preview-text">We have a new support request that needs attention...</div>
+                            </div>
+                            <div class="email-time">3h ago</div>
+                        </div>
+                    </div>
+                    <div class="service-actions" style="margin-top: 1rem;">
+                        <button class="btn btn-primary" onclick="refreshEmails()">
+                            <i class="fas fa-sync"></i>
+                            Refresh
+                        </button>
+                        <button class="btn btn-success" onclick="composeEmail()">
+                            <i class="fas fa-edit"></i>
+                            Compose Email
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Calendar Section -->
+            <section id="calendar-section" class="content-section" style="display: none;">
+                <div class="calendar-preview">
+                    <h2>Today's Schedule</h2>
+                    <div id="calendar-events">
+                        <div class="calendar-event">
+                            <div class="event-time">9:00 AM</div>
+                            <div>
+                                <div class="event-title">Team Standup</div>
+                                <div class="event-description">Daily team sync meeting</div>
+                            </div>
+                        </div>
+                        <div class="calendar-event">
+                            <div class="event-time">2:00 PM</div>
+                            <div>
+                                <div class="event-title">Client Meeting</div>
+                                <div class="event-description">Discuss project requirements</div>
+                            </div>
+                        </div>
+                        <div class="calendar-event">
+                            <div class="event-time">4:00 PM</div>
+                            <div>
+                                <div class="event-title">Code Review</div>
+                                <div class="event-description">Review latest changes</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="service-actions" style="margin-top: 1rem;">
+                        <button class="btn btn-primary" onclick="refreshCalendar()">
+                            <i class="fas fa-sync"></i>
+                            Refresh
+                        </button>
+                        <button class="btn btn-success" onclick="createEvent()">
+                            <i class="fas fa-plus"></i>
+                            Add Event
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Meet Section -->
+            <section id="meet-section" class="content-section" style="display: none;">
+                <div class="meet-controls">
+                    <h2>Google Meet Controls</h2>
+                    <button class="meet-button" onclick="createMeeting()">
+                        <i class="fas fa-video"></i>
+                        Create Instant Meeting
+                    </button>
+                    <div id="meet-link" class="meet-link" style="display: none;">
+                        <!-- Meeting link will appear here -->
+                    </div>
+                    <div class="service-actions" style="margin-top: 1rem;">
+                        <button class="btn btn-primary" onclick="joinMeeting()">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Join Meeting
+                        </button>
+                        <button class="btn btn-secondary" onclick="scheduleMeeting()">
+                            <i class="fas fa-calendar"></i>
+                            Schedule Meeting
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Drive Section -->
+            <section id="drive-section" class="content-section" style="display: none;">
+                <div class="storage-overview">
+                    <h2>Google Drive Files</h2>
+                    <div id="drive-files">
+                        <div class="email-item">
+                            <div class="email-avatar">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <div class="email-content">
+                                <div class="email-sender">Project Proposal.pdf</div>
+                                <div class="email-subject">Shared with team</div>
+                                <div class="email-preview-text">Last modified 2 hours ago</div>
+                            </div>
+                            <div class="email-time">2h ago</div>
+                        </div>
+                        <div class="email-item">
+                            <div class="email-avatar">
+                                <i class="fas fa-file-image"></i>
+                            </div>
+                            <div class="email-content">
+                                <div class="email-sender">Logo Design.png</div>
+                                <div class="email-subject">Brand assets</div>
+                                <div class="email-preview-text">Last modified 1 day ago</div>
+                            </div>
+                            <div class="email-time">1d ago</div>
+                        </div>
+                    </div>
+                    <div class="service-actions" style="margin-top: 1rem;">
+                        <button class="btn btn-primary" onclick="refreshDrive()">
+                            <i class="fas fa-sync"></i>
+                            Refresh
+                        </button>
+                        <button class="btn btn-success" onclick="uploadFile()">
+                            <i class="fas fa-upload"></i>
+                            Upload File
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Cloud Storage Section -->
+            <section id="cloud-section" class="content-section" style="display: none;">
+                <div class="storage-overview">
+                    <h2>Google Cloud Storage</h2>
+                    <p>Project: Meauxbility-Core (gen-lang-client-0938727621)</p>
+                    <div class="storage-bar">
+                        <div class="storage-used" style="width: 35%"></div>
+                    </div>
+                    <div class="storage-stats">
+                        <div class="storage-stat">
+                            <div class="storage-stat-value">700GB</div>
+                            <div class="storage-stat-label">Used</div>
+                        </div>
+                        <div class="storage-stat">
+                            <div class="storage-stat-value">1.3TB</div>
+                            <div class="storage-stat-label">Available</div>
+                        </div>
+                        <div class="storage-stat">
+                            <div class="storage-stat-value">2TB</div>
+                            <div class="storage-stat-label">Total</div>
+                        </div>
+                    </div>
+                    <div class="service-actions" style="margin-top: 1rem;">
+                        <button class="btn btn-primary" onclick="refreshStorage()">
+                            <i class="fas fa-sync"></i>
+                            Refresh Stats
+                        </button>
+                        <button class="btn btn-success" onclick="optimizeStorage()">
+                            <i class="fas fa-cog"></i>
+                            Optimize Storage
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Other sections would go here -->
+            <section id="payments-section" class="content-section" style="display: none;">
+                <div class="service-card">
+                    <h2>Stripe Payment Dashboard</h2>
+                    <p>Payment processing setup needed</p>
+                    <div class="service-actions">
+                        <button class="btn btn-warning" onclick="setupStripe()">
+                            <i class="fas fa-cog"></i>
+                            Setup Stripe
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="database-section" class="content-section" style="display: none;">
+                <div class="service-card">
+                    <h2>Supabase Database</h2>
+                    <p>Database connected and running</p>
+                    <div class="service-actions">
+                        <button class="btn btn-primary" onclick="viewDatabase()">
+                            <i class="fas fa-eye"></i>
+                            View Database
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="hosting-section" class="content-section" style="display: none;">
+                <div class="service-card">
+                    <h2>Render Hosting</h2>
+                    <p>Application hosting and deployment</p>
+                    <div class="service-actions">
+                        <button class="btn btn-primary" onclick="viewHosting()">
+                            <i class="fas fa-eye"></i>
+                            View Hosting
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification">
+        <div id="notification-content"></div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentSection = 'overview';
+        let meetingLink = '';
+
+        // Navigation
+        function switchSection(section) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(s => {
+                s.style.display = 'none';
+            });
+
+            // Remove active class from all nav links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(`${section}-section`).style.display = 'block';
+
+            // Add active class to selected nav link
+            document.querySelector(`[data-section="${section}"]`).classList.add('active');
+
+            currentSection = section;
+
+            // Load section-specific data
+            loadSectionData(section);
+        }
+
+        // Load data for specific sections
+        function loadSectionData(section) {
+            switch(section) {
+                case 'gmail':
+                    loadGmailData();
+                    break;
+                case 'calendar':
+                    loadCalendarData();
+                    break;
+                case 'meet':
+                    // Meet doesn't need pre-loading
+                    break;
+                case 'drive':
+                    loadDriveData();
+                    break;
+                case 'cloud':
+                    loadCloudData();
+                    break;
+            }
+        }
+
+        // Gmail functions
+        function loadGmailData() {
+            showNotification('Loading Gmail data...', 'info');
+            // Simulate API call
+            setTimeout(() => {
+                showNotification('Gmail data loaded', 'success');
+            }, 1000);
+        }
+
+        function refreshEmails() {
+            showNotification('Refreshing emails...', 'info');
+            setTimeout(() => {
+                showNotification('Emails refreshed', 'success');
+            }, 1000);
+        }
+
+        function composeEmail() {
+            showNotification('Opening email composer...', 'info');
+            // In a real implementation, this would open a compose modal
+            setTimeout(() => {
+                showNotification('Email composer ready', 'success');
+            }, 500);
+        }
+
+        // Calendar functions
+        function loadCalendarData() {
+            showNotification('Loading calendar data...', 'info');
+            setTimeout(() => {
+                showNotification('Calendar data loaded', 'success');
+            }, 1000);
+        }
+
+        function refreshCalendar() {
+            showNotification('Refreshing calendar...', 'info');
+            setTimeout(() => {
+                showNotification('Calendar refreshed', 'success');
+            }, 1000);
+        }
+
+        function createEvent() {
+            showNotification('Opening event creator...', 'info');
+            setTimeout(() => {
+                showNotification('Event creator ready', 'success');
+            }, 500);
+        }
+
+        // Meet functions
+        function createMeeting() {
+            showNotification('Creating meeting...', 'info');
+
+            // Generate a random meeting ID
+            const meetingId = Math.random().toString(36).substring(2, 15);
+            meetingLink = `https://meet.google.com/${meetingId}`;
+
+            setTimeout(() => {
+                document.getElementById('meet-link').style.display = 'block';
+                document.getElementById('meet-link').textContent = meetingLink;
+                showNotification('Meeting created successfully!', 'success');
+            }, 1500);
+        }
+
+        function joinMeeting() {
+            if (meetingLink) {
+                window.open(meetingLink, '_blank');
+                showNotification('Joining meeting...', 'success');
+            } else {
+                showNotification('Please create a meeting first', 'warning');
+            }
+        }
+
+        function scheduleMeeting() {
+            showNotification('Opening meeting scheduler...', 'info');
+            setTimeout(() => {
+                showNotification('Meeting scheduler ready', 'success');
+            }, 500);
+        }
+
+        // Drive functions
+        function loadDriveData() {
+            showNotification('Loading Drive data...', 'info');
+            setTimeout(() => {
+                showNotification('Drive data loaded', 'success');
+            }, 1000);
+        }
+
+        function refreshDrive() {
+            showNotification('Refreshing Drive files...', 'info');
+            setTimeout(() => {
+                showNotification('Drive files refreshed', 'success');
+            }, 1000);
+        }
+
+        function uploadFile() {
+            showNotification('Opening file upload...', 'info');
+            setTimeout(() => {
+                showNotification('File upload ready', 'success');
+            }, 500);
+        }
+
+        // Cloud functions
+        function loadCloudData() {
+            showNotification('Loading cloud storage data...', 'info');
+            setTimeout(() => {
+                showNotification('Cloud storage data loaded', 'success');
+            }, 1000);
+        }
+
+        function refreshStorage() {
+            showNotification('Refreshing storage stats...', 'info');
+            setTimeout(() => {
+                showNotification('Storage stats refreshed', 'success');
+            }, 1000);
+        }
+
+        function optimizeStorage() {
+            showNotification('Starting storage optimization...', 'info');
+            setTimeout(() => {
+                showNotification('Storage optimization complete!', 'success');
+            }, 3000);
+        }
+
+        // Other service functions
+        function setupStripe() {
+            showNotification('Opening Stripe setup...', 'info');
+            setTimeout(() => {
+                showNotification('Stripe setup ready', 'success');
+            }, 500);
+        }
+
+        function viewDatabase() {
+            showNotification('Opening Supabase dashboard...', 'info');
+            setTimeout(() => {
+                showNotification('Database dashboard ready', 'success');
+            }, 500);
+        }
+
+        function viewHosting() {
+            showNotification('Opening Render dashboard...', 'info');
+            setTimeout(() => {
+                showNotification('Hosting dashboard ready', 'success');
+            }, 500);
+        }
+
+        // Notification system
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            const content = document.getElementById('notification-content');
+
+            content.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up navigation
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const section = this.dataset.section;
+                    switchSection(section);
+                });
+            });
+
+            // Set up quick actions
+            document.querySelectorAll('.quick-action').forEach(action => {
+                action.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const section = this.href.split('#')[1];
+                    switchSection(section);
+                });
+            });
+
+            // Load initial data
+            loadSectionData('overview');
+
+            showNotification('Cloud Dashboard loaded successfully!', 'success');
+        });
+
+        // Auto-refresh data every 5 minutes
+        setInterval(() => {
+            if (currentSection !== 'overview') {
+                loadSectionData(currentSection);
+            }
+        }, 300000);
+    </script>
+</body>
+</html>
